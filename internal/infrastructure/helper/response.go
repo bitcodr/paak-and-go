@@ -12,7 +12,7 @@ func NewResponse(r Response) Response {
 	switch r.(type) {
 	case *Json:
 		return &Json{}
-	//you can add another response content type in here
+	//you can add another response content type in here and implement it
 	default:
 		return &Json{}
 	}

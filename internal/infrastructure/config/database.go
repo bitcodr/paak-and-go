@@ -1,11 +1,14 @@
 package config
 
+const (
+	POSTGRES = "postgres"
+)
+
 type DB struct {
-	Connections []*Connection
+	Connections map[string]*Connection
 }
 
 type Connection struct {
-	Name     string
 	Port     int
 	Host     string
 	Username string

@@ -18,9 +18,9 @@ func main() {
 		log.Fatalln(err.Error())
 	}
 
-	repo := repository.New(ctx, nil, &cfg.DB)
-	if repo == nil {
-		log.Fatalln("repo is not exist")
+	repo, err := repository.New(ctx, config.POSTGRES, &cfg.DB)
+	if err != nil {
+		log.Fatalln(err.Error())
 	}
 
 	tripService := trip.New(ctx, repo)
