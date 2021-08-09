@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/fsnotify/fsnotify"
@@ -17,7 +18,6 @@ type Config struct {
 func Load(ctx context.Context) (*Config, error) {
 	v := viper.New()
 
-	setDefaultDBConfig(v)
 	setDefaultServiceConfig(v)
 
 	v.SetConfigName("config")
@@ -28,7 +28,7 @@ func Load(ctx context.Context) (*Config, error) {
 	v.AddConfigPath(".\\config.d")
 
 	if err := v.ReadInConfig(); err != nil {
-		fmt.Printf("Error in reading configs from file: %+v \n", err)
+		log.Fatalf("Error in reading configs from file: %+v \n\n", err)
 	}
 
 	v.AutomaticEnv()
@@ -52,7 +52,7 @@ func watchConfigChanges(_ context.Context, v *viper.Viper) {
 		var config Config
 		err := v.Unmarshal(&config)
 		if err != nil {
-			fmt.Print("Fatal error when unmarshal config:", err)
+			log.Fatalln("Fatal error when unmarshal config:", err)
 		}
 	})
 }

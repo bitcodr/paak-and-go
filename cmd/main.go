@@ -2,26 +2,30 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"log"
+
+	"github.com/bitcodr/paak-and-go/internal/domain/service/trip"
+	"github.com/bitcodr/paak-and-go/internal/infrastructure/config"
+	"github.com/bitcodr/paak-and-go/internal/infrastructure/repository"
+	"github.com/bitcodr/paak-and-go/internal/interfaces/transport"
 )
 
-func main(){
+func main() {
 	ctx := context.Background()
 
-	//logger := initLogger(ctx)
-	//_ = level.Info(logger).Log(
-	//	"msg", fmt.Sprintf("run %s with commit %s & commit date %s by version %s",
-	//		serviceName, versionCommit, versionDate, versionTag),
-	//	"func", "main", "when", "Bootstaping project")
-	//
-	//
-	//cfg, err := config.Load(ctx, serviceName)
-	//if err != nil {
-	//	_ = level.Error(logger).Log(
-	//		"err", err,
-	//		"msg", "Error occurred while creating configs.",
-	//		"func", "config.Load()", "when", "LoadConfig")
-	//
-	//	panic(err)
-	//}
+	cfg, err := config.Load(ctx)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+
+	repo := repository.New(ctx, nil, &cfg.DB)
+	if repo == nil {
+		log.Fatalln("repo is not exist")
+	}
+
+	tripService := trip.New(ctx, repo)
+
+	transport.NewRest(ctx, &transport.Service{
+		TripService: tripService,
+	}, &cfg.Service)
 }
