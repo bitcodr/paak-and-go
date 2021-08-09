@@ -1,0 +1,14 @@
+service:
+  host: '127.0.0.1'
+  rest_port: '7201'
+  read_timeout: 100s
+  write_timeout: 100s
+  idle_timeout: 100s
+db:
+  connections:
+    postgres:
+      port: 5432
+      host: "127.0.0.1"
+      username: "postgres"
+      password: ""
+      ssl: "disable"

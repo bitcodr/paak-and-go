@@ -6,11 +6,23 @@ import (
 	"net/http"
 
 	"github.com/bitcodr/paak-and-go/internal/domain/model"
-	"github.com/bitcodr/paak-and-go/internal/infrastructure/repository"
+	"github.com/bitcodr/paak-and-go/internal/infrastructure/repository/impl"
 )
 
+type ITrip interface {
+	List(ctx context.Context) ([]*model.Trip, error)
+	Show(ctx context.Context, id int32) (*model.Trip, error)
+	Store(ctx context.Context, trip *model.Trip) (*model.Trip, error)
+}
+
 type trip struct {
-	repo repository.Repository
+	repo impl.Trip
+}
+
+func InitService(_ context.Context, repository impl.Trip) ITrip {
+	return &trip{
+		repo: repository,
+	}
 }
 
 func (t *trip) List(ctx context.Context) (trips []*model.Trip, err error) {

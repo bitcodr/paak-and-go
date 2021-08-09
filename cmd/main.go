@@ -6,7 +6,7 @@ import (
 
 	"github.com/bitcodr/paak-and-go/internal/domain/service/trip"
 	"github.com/bitcodr/paak-and-go/internal/infrastructure/config"
-	"github.com/bitcodr/paak-and-go/internal/infrastructure/repository"
+	triprepo "github.com/bitcodr/paak-and-go/internal/infrastructure/repository/postgres/trip"
 	"github.com/bitcodr/paak-and-go/internal/interfaces/transport"
 )
 
@@ -18,14 +18,14 @@ func main() {
 		log.Fatalln(err.Error())
 	}
 
-	repo, err := repository.New(ctx, config.POSTGRES, &cfg.DB)
+	repo, err := triprepo.InitRepo(ctx, cfg.Connections[config.POSTGRES])
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
 
-	tripService := trip.New(ctx, repo)
+	tripService := trip.InitService(ctx, repo)
 
-	transport.NewRest(ctx, &transport.Service{
+	transport.InitRest(ctx, &transport.Service{
 		TripService: tripService,
 	}, &cfg.Service)
 }

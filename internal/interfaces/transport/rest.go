@@ -17,9 +17,10 @@ import (
 
 type Service struct {
 	TripService tripservice.ITrip
+	//register your services in transport in here
 }
 
-func NewRest(ctx context.Context, services *Service, config *config.Service) {
+func InitRest(ctx context.Context, services *Service, config *config.Service) {
 
 	router := mux.NewRouter()
 
