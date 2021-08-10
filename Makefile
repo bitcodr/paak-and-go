@@ -97,13 +97,6 @@ migrate-down:migrate ## Apply all down migrations
 migrate-drop:migrate ## Apply all down migrations
 	@ $(MIGRATE) $(MIGRATE_CONFIG) drop
 
-
-.PHONY: seed
-seed: ## Create seed for database. Example: make seed rows=10
-	@ test -e $(MOCK_DATA) || $(MOCK_DATA_DOWNLOAD)
-	@ $(MOCK_DATA) $(MOCK_DATA_CONFIG)
-
-
 .PHONY: docs
 docs: ## Create/Update documents using swagger tool
 	@ test -e  $(SWAG) || $(SWAG_DOWNLOAD)
