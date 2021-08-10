@@ -3,6 +3,7 @@ package trip
 import (
 	"context"
 	"errors"
+	"net/http"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 
@@ -37,10 +38,10 @@ func (p *trip) List(ctx context.Context, offset, limit int) (trips []*model.Trip
 	defer p.conn.Close()
 
 	query, err := p.conn.Query(ctx, `SELECT 
-				id, origin_id, destination_id, dates, price 
+				trips.id, trips.dates, trips.price, origin.name, destination.name
 				FROM trips 
-				INNER JOIN city AS origin ON trips.origin_id = origin.id
-				INNER JOIN city AS destination ON trips.destination_id = destination.id
+				INNER JOIN cities AS origin ON trips.origin_id = origin.id
+				INNER JOIN cities AS destination ON trips.destination_id = destination.id
 				ORDER BY trips.created_at DESC OFFSET $1 LIMIT $2`, offset, limit)
 
 	if err != nil {
@@ -49,13 +50,24 @@ func (p *trip) List(ctx context.Context, offset, limit int) (trips []*model.Trip
 
 	defer query.Close()
 
+	if !query.Next() {
+		return nil, errors.New(http.StatusText(http.StatusNoContent))
+	}
+
 	for query.Next() {
-		var trip *model.Trip
-		if err := query.Scan(&trip); err != nil {
+
+		var trip model.Trip
+		var origin, destination model.City
+
+		err := query.Scan(&trip.ID, &trip.Dates, &trip.Price, &origin.Name, &destination.Name)
+		if err != nil {
 			return nil, err
 		}
 
-		trips = append(trips, trip)
+		trip.Origin = &origin
+		trip.Destination = &destination
+
+		trips = append(trips, &trip)
 	}
 
 	return trips, nil
@@ -65,10 +77,11 @@ func (p *trip) Show(ctx context.Context, id int32) (trip *model.Trip, err error)
 	defer p.conn.Close()
 
 	row := p.conn.QueryRow(ctx, `SELECT 
-				id, origin_id, destination_id, dates, price 
+				trips.id, trips.origin_id, trips.destination_id, 
+				trips.dates, trips.price, origin.name, destination.name
 				FROM trips 
-				INNER JOIN city AS origin ON trips.origin_id = origin.id
-				INNER JOIN city AS destination ON trips.destination_id = destination.id
+				INNER JOIN cities AS origin ON trips.origin_id = origin.id
+				INNER JOIN cities AS destination ON trips.destination_id = destination.id
 				WHERE trips.id = $1`, id)
 
 	if err := row.Scan(&trip); err != nil {

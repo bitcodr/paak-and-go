@@ -27,6 +27,7 @@ func List(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 			parsedID, err := strconv.ParseInt(v, 10, 32)
 			if err != nil {
 				helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+				return
 			}
 
 			//offset starts from 0, and the page query string can be page 1, 2, 3 and so on
@@ -39,6 +40,7 @@ func List(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 			parsedID, err := strconv.ParseInt(v, 10, 32)
 			if err != nil {
 				helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+				return
 			}
 
 			if parsedID > 0 {
@@ -47,11 +49,15 @@ func List(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 		}
 
 		response, err := tripSrv.List(ctx, offset, limit)
+		if err != nil {
+			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusUnprocessableEntity)
+			return
+		}
 
 		body, err := json.Marshal(response)
-
 		if err != nil {
 			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+			return
 		}
 
 		helper.NewResponse(&helper.Json{}).Write(w, body, http.StatusOK)
@@ -68,16 +74,22 @@ func Show(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 			parsedID, err := strconv.ParseInt(v, 10, 32)
 			if err != nil {
 				helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+				return
 			}
 
 			id = int32(parsedID)
 		}
 
 		response, err := tripSrv.Show(ctx, id)
+		if err != nil {
+			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+			return
+		}
 
 		body, err := json.Marshal(response)
 		if err != nil {
 			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+			return
 		}
 
 		helper.NewResponse(&helper.Json{}).Write(w, body, http.StatusOK)
@@ -89,11 +101,13 @@ func Store(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+			return
 		}
 
 		defer func() {
 			if err := r.Body.Close(); err != nil {
 				helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+				return
 			}
 		}()
 
@@ -101,13 +115,19 @@ func Store(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 
 		if err := json.Unmarshal(body, &tripModel); err != nil {
 			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+			return
 		}
 
 		response, err := tripSrv.Store(ctx, tripModel)
+		if err != nil {
+			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+			return
+		}
 
 		body, err = json.Marshal(response)
 		if err != nil {
 			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+			return
 		}
 
 		helper.NewResponse(&helper.Json{}).Write(w, body, http.StatusOK)

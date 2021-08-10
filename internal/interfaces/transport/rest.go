@@ -41,7 +41,7 @@ func InitRest(ctx context.Context, services *Service, config *config.Service) {
 	go func() {
 		fmt.Printf("listening on %s\n", config.Host+":"+config.RestPort)
 		if err := srv.ListenAndServe(); err != nil {
-			log.Println(err)
+			log.Fatalln(err)
 		}
 	}()
 
@@ -55,6 +55,7 @@ func graceFullyShotDown(ctx context.Context, srv *http.Server, config *config.Se
 	ctx, cancel := context.WithTimeout(context.Background(), config.IdleTimeout)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
+		log.Println(err)
 		return
 	}
 	log.Println("shutting down")
