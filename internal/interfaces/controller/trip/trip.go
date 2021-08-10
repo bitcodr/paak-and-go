@@ -18,7 +18,35 @@ type Controller func(http.ResponseWriter, *http.Request)
 
 func List(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 	return func(w http.ResponseWriter, r *http.Request) {
-		response, err := tripSrv.List(ctx)
+		vars := mux.Vars(r)
+
+		offset := 0
+		limit := 10
+
+		if v, ok := vars["page"]; ok {
+			parsedID, err := strconv.ParseInt(v, 10, 32)
+			if err != nil {
+				helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+			}
+
+			//offset starts from 0, and the page query string can be page 1, 2, 3 and so on
+			if parsedID > 0 {
+				offset = int(parsedID) - 1
+			}
+		}
+
+		if v, ok := vars["limit"]; ok {
+			parsedID, err := strconv.ParseInt(v, 10, 32)
+			if err != nil {
+				helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+			}
+
+			if parsedID > 0 {
+				limit = int(parsedID)
+			}
+		}
+
+		response, err := tripSrv.List(ctx, offset, limit)
 
 		body, err := json.Marshal(response)
 
@@ -46,6 +74,7 @@ func Show(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 		}
 
 		response, err := tripSrv.Show(ctx, id)
+
 		body, err := json.Marshal(response)
 		if err != nil {
 			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
@@ -75,6 +104,7 @@ func Store(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 		}
 
 		response, err := tripSrv.Store(ctx, tripModel)
+
 		body, err = json.Marshal(response)
 		if err != nil {
 			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)

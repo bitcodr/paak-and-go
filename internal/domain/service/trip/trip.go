@@ -10,7 +10,7 @@ import (
 )
 
 type ITrip interface {
-	List(ctx context.Context) ([]*model.Trip, error)
+	List(ctx context.Context, offset, limit int) ([]*model.Trip, error)
 	Show(ctx context.Context, id int32) (*model.Trip, error)
 	Store(ctx context.Context, trip *model.Trip) (*model.Trip, error)
 }
@@ -25,8 +25,8 @@ func InitService(_ context.Context, repository impl.Trip) ITrip {
 	}
 }
 
-func (t *trip) List(ctx context.Context) (trips []*model.Trip, err error) {
-	trips, err = t.repo.List(ctx)
+func (t *trip) List(ctx context.Context, offset, limit int) (trips []*model.Trip, err error) {
+	trips, err = t.repo.List(ctx, offset, limit)
 	if err != nil {
 		return nil, err
 	}
