@@ -71,20 +71,26 @@ func (p *trip) List(ctx context.Context, offset, limit int) (trips []*model.Trip
 	return trips, nil
 }
 
-func (p *trip) Show(ctx context.Context, id int32) (trip *model.Trip, err error) {
+func (p *trip) Show(ctx context.Context, id int32) (*model.Trip, error) {
 	row := p.conn.QueryRow(ctx, `SELECT 
-				trips.id, trips.origin_id, trips.destination_id, 
-				trips.dates, trips.price, origin.name, destination.name
+				trips.id, trips.dates, trips.price, origin.name, destination.name
 				FROM trips 
 				INNER JOIN cities AS origin ON trips.origin_id = origin.id
 				INNER JOIN cities AS destination ON trips.destination_id = destination.id
 				WHERE trips.id = $1`, id)
 
-	if err := row.Scan(&trip); err != nil {
+	var trip model.Trip
+
+	var origin, destination model.City
+
+	if err := row.Scan(&trip.ID, &trip.Dates, &trip.Price, &origin.Name, &destination.Name); err != nil {
 		return nil, err
 	}
 
-	return trip, nil
+	trip.Origin = &origin
+	trip.Destination = &destination
+
+	return &trip, nil
 }
 
 func (p *trip) Store(ctx context.Context, trip *model.Trip) (*model.Trip, error) {

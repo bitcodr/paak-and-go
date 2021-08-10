@@ -82,7 +82,7 @@ func Show(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 
 		response, err := tripSrv.Show(ctx, id)
 		if err != nil {
-			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusUnprocessableEntity)
 			return
 		}
 
@@ -120,7 +120,7 @@ func Store(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 
 		response, err := tripSrv.Store(ctx, tripModel)
 		if err != nil {
-			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusInternalServerError)
+			helper.NewResponse(&helper.Json{}).Write(w, []byte(err.Error()), http.StatusUnprocessableEntity)
 			return
 		}
 
