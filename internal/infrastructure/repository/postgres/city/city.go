@@ -17,7 +17,7 @@ type city struct {
 	conn *pgxpool.Pool
 }
 
-func InitRepo(ctx context.Context, cfg *config.Connection) (impl.Trip, error) {
+func InitRepo(ctx context.Context, cfg *config.Connection) (impl.City, error) {
 	if cfg == nil {
 		return nil, errors.New("config is empty")
 	}
@@ -33,19 +33,19 @@ func InitRepo(ctx context.Context, cfg *config.Connection) (impl.Trip, error) {
 	}, nil
 }
 
-func (c *city) List(ctx context.Context) ([]*model.Trip, error) {
+func (c *city) List(ctx context.Context, offset, limit int) ([]*model.City, error) {
 	//todo impl
 
 	return nil, nil
 }
 
-func (c *city) Show(ctx context.Context, id int32) (*model.Trip, error) {
+func (c *city) Show(ctx context.Context, id int32) (*model.City, error) {
 	//todo impl
 
 	return nil, nil
 }
 
-func (c *city) Store(ctx context.Context, city *model.Trip) (*model.Trip, error) {
+func (c *city) Store(ctx context.Context, city *model.City) (*model.City, error) {
 	//todo impl
 
 	return nil, nil
