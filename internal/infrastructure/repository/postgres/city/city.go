@@ -33,7 +33,7 @@ func InitRepo(ctx context.Context, cfg *config.Connection) (impl.City, error) {
 	}, nil
 }
 
-func (c *city) List(ctx context.Context, offset, limit int) ([]*model.City, error) {
+func (c *city) List(ctx context.Context) ([]*model.City, error) {
 	//todo impl
 
 	return nil, nil

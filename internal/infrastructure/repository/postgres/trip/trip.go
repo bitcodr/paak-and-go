@@ -34,13 +34,15 @@ func InitRepo(ctx context.Context, cfg *config.Connection) (impl.Trip, error) {
 	}, nil
 }
 
-func (p *trip) List(ctx context.Context, offset, limit int) (trips []*model.Trip, err error) {
+func (p *trip) List(ctx context.Context) (trips []*model.Trip, err error) {
+	//todo add OFFSET, LIMIT for pagination
+
 	query, err := p.conn.Query(ctx, `SELECT 
 				trips.id, trips.dates, trips.price, origin.name, destination.name
 				FROM trips 
 				INNER JOIN cities AS origin ON trips.origin_id = origin.id
 				INNER JOIN cities AS destination ON trips.destination_id = destination.id
-				ORDER BY trips.created_at DESC OFFSET $1 LIMIT $2`, offset, limit)
+				ORDER BY trips.created_at DESC`)
 
 	if err != nil {
 		return nil, err
