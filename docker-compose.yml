@@ -5,7 +5,7 @@ services:
     container_name: paak_app
     build:
       context: .
-      dockerfile: docker/develop/Dockerfile
+      dockerfile: docker/Dockerfile
     restart: on-failure
     environment:
       - DB_HOST=postgres
@@ -18,36 +18,10 @@ services:
       - backend
     depends_on:
       - postgres
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://0.0.0.0:8051/v1/health"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-
-   deploy:
-     container_name: payment_service_deployment
-     image: git.wki.ir:5050/idpay/next/payment-service
-     restart: on-failure
-     environment:
-       - DB_HOST=postgres
-       - SERVER_REST_PORT=8041
-     ports:
-       - 8041:8041
-     volumes:
-       - ./config.d:/app/config.d
-     networks:
-       - backend
-     depends_on:
-       - postgres
-     healthcheck:
-       test: ["CMD", "curl", "-f", "http://0.0.0.0:8041/v1/health"]
-       interval: 30s
-       timeout: 3s
-       retries: 3
 
   postgres:
-    container_name: payment_service_postgres
-    image: postgres:12
+    container_name: paak_postgres
+    image: postgres:13
     environment:
       DATABASE_HOST: "${DB_HOST}"
       POSTGRES_DB: "${DB_NAME}"
