@@ -1,6 +1,0 @@
-1, Barcelona
-2, Seville
-3, Madrid
-4, Valencia
-5, Andorra la Vella
-6, Malaga
