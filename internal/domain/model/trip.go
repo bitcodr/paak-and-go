@@ -2,12 +2,13 @@ package model
 
 import (
 	"encoding/json"
+	"errors"
 )
 
 type Trip struct {
-	ID          int32 `json:"id"`
-	Origin      *City
-	Destination *City
+	ID          int32   `json:"id"`
+	Origin      *City   `json:"-"`
+	Destination *City   `json:"-"`
 	Dates       string  `json:"dates"`
 	Price       float64 `json:"price"`
 }
@@ -40,29 +41,28 @@ func (t *Trip) UnmarshalJSON(in []byte) error {
 	return nil
 }
 
-
-//MarshalJSON custom unmarshaler that will satisfy golang Unmarshaler interface
+//MarshalJSON custom unmarshaler that will satisfy golang Marshaler interface
 func (t *Trip) MarshalJSON() ([]byte, error) {
 	type Alias Trip
+
+	if t.Origin == nil || t.Destination == nil {
+		return nil, errors.New("origin or destination are empty")
+	}
 
 	var result = &struct {
 		Origin      string `json:"origin"`
 		Destination string `json:"destination"`
 		*Alias
 	}{
-		Alias: (*Alias)(t),
+		Origin:      t.Origin.Name,
+		Destination: t.Destination.Name,
+		Alias:       (*Alias)(t),
 	}
 
-	err := json.Marshal(&result)
+	body, err := json.Marshal(&result)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	t.Origin = result.Origin
-
-	t.Destination = &City{
-		ID: result.Destination,
-	}
-
-	return nil
+	return body, nil
 }
