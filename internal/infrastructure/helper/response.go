@@ -21,8 +21,9 @@ func NewResponse(r Response) Response {
 type Json struct{}
 
 func (j *Json) Write(w http.ResponseWriter, body []byte, status int) {
+	//todo implement better structure for errors
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	w.Header().Set("content-type", "application/json")
 	if _, err := w.Write(body); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

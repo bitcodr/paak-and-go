@@ -35,8 +35,6 @@ func InitRepo(ctx context.Context, cfg *config.Connection) (impl.Trip, error) {
 }
 
 func (p *trip) List(ctx context.Context, offset, limit int) (trips []*model.Trip, err error) {
-	defer p.conn.Close()
-
 	query, err := p.conn.Query(ctx, `SELECT 
 				trips.id, trips.dates, trips.price, origin.name, destination.name
 				FROM trips 
@@ -74,8 +72,6 @@ func (p *trip) List(ctx context.Context, offset, limit int) (trips []*model.Trip
 }
 
 func (p *trip) Show(ctx context.Context, id int32) (trip *model.Trip, err error) {
-	defer p.conn.Close()
-
 	row := p.conn.QueryRow(ctx, `SELECT 
 				trips.id, trips.origin_id, trips.destination_id, 
 				trips.dates, trips.price, origin.name, destination.name
@@ -92,8 +88,6 @@ func (p *trip) Show(ctx context.Context, id int32) (trip *model.Trip, err error)
 }
 
 func (p *trip) Store(ctx context.Context, trip *model.Trip) (*model.Trip, error) {
-	defer p.conn.Close()
-
 	var tripId int32
 
 	err := p.conn.QueryRow(ctx, `INSERT INTO trips 
