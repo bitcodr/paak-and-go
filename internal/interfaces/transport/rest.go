@@ -2,6 +2,7 @@ package transport
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -31,7 +32,7 @@ func InitRest(ctx context.Context, services *Service, config *config.Service) {
 	router.Use(middleware.Logging)
 
 	srv := &http.Server{
-		Addr:         config.Host + config.RestPort,
+		Addr:         config.Host + ":" + config.RestPort,
 		WriteTimeout: config.WriteTimeout,
 		ReadTimeout:  config.ReadTimeout,
 		IdleTimeout:  config.IdleTimeout,
@@ -39,6 +40,7 @@ func InitRest(ctx context.Context, services *Service, config *config.Service) {
 	}
 
 	go func() {
+		fmt.Printf("listening on %s\n", config.Host+":"+config.RestPort)
 		if err := srv.ListenAndServe(); err != nil {
 			log.Println(err)
 		}
