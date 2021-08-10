@@ -1,3 +1,6 @@
+include ./config.d/.env
+export $(shell sed 's/=.*//' ./config.d/.env)
+
 SERVICE_NAME = $(shell basename "$(PWD)")
 
 ROOT = $(shell pwd)
@@ -30,19 +33,25 @@ help: ## Display this help message
 
 
 .PHONY: release
-release: ## Build production binary file
+release:create-env ## Build production binary file
 	@ $(GO) build -a -o ./bin/${SERVICE_NAME} ./cmd/...
 
 
 .PHONY: build
-build: ## Build development binary file
+build:create-env ## Build development binary file
 	@ $(GO) build -o ./bin/${SERVICE_NAME} ./cmd/...
 
 
 .PHONY: run
-run: ## run as development reload if code changes
+run:create-env ## run as development reload if code changes
 	@ test -e $(COMPILEDEAMON) || $(COMPILEDEAMON_DOWNLOAD)
 	@ $(COMPILEDEAMON) --build="make build" --command="$(GOBIN)/$(SERVICE_NAME)"
+
+
+.PHONY: create-env
+create-env: ## Create .env and config.yml file
+	@ test -e ./config.d/.env && echo ./config.d/.env exists || cp ./config.d/.env.example ./config.d/.env
+	@ test -e ./config.d/config.yml && echo ./config.d/config.yml exists || cp ./config.d/config.yml.example ./config.d/config.yml
 
 
 .PHONY: mod
@@ -51,20 +60,20 @@ mod: ## Get dependency packages
 
 
 .PHONY: test
-test: ## Run unit tests
+test:create-env ## Run unit tests
 	echo $(TPARSE)
 	@ test -e $(TPARSE) || $(TPARSE_DOWNLOAD)
 	@ $(GO) test -failfast -count=1 ./... -json -cover | $(TPARSE) -all -smallscreen
 
 
 .PHONY: race
-race: ## Run data race detector
+race:create-env ## Run data race detector
 	@ test -e $(TPARSE) || $(TPARSE_DOWNLOAD)
 	@ $(GO) test -short -race ./... -json -cover | $(TPARSE) -all -smallscreen
 
 
 .PHONY: coverage
-coverage: ## check coverage test code of sample https://penkovski.com/post/gitlab-golang-test-coverage/
+coverage:create-env ## check coverage test code
 	@ $(GO) test ./... -coverprofile=coverage.out
 	@ $(GO) tool cover -func=coverage.out
 	@ $(GO) tool cover -html=coverage.out -o coverage.html;

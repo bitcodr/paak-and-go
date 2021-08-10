@@ -7,6 +7,7 @@ service:
 db:
   connections:
     postgres:
+      name: "paak"
       port: 5432
       host: "postgres"
       username: "postgres"

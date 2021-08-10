@@ -1,1 +1,9 @@
-COPY cities FROM '../seed/cities.txt' WITH (FORMAT csv);
+INSERT INTO cities
+(name)
+VALUES
+('Barcelona'),
+('Seville'),
+('Madrid'),
+('Valencia'),
+('Andorra la Vella'),
+('Malaga');

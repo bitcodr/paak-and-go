@@ -22,7 +22,6 @@ type Service struct {
 }
 
 func InitRest(ctx context.Context, services *Service, config *config.Service) {
-
 	router := mux.NewRouter()
 
 	router.HandleFunc("/trip", tripcontroller.List(ctx, services.TripService)).Methods(http.MethodGet)

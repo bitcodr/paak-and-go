@@ -28,10 +28,7 @@ vendor/
 .DS_Store
 
 # Environments
-.env
+config.d/.env
 
 # Config files
 config.d/config.yml
-
-# UML diagram
-diagram.puml

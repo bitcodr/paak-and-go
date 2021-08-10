@@ -9,6 +9,7 @@ type DB struct {
 }
 
 type Connection struct {
+	Name     string
 	Port     int
 	Host     string
 	Username string
