@@ -14,7 +14,7 @@ LINT = ${GOBIN}/golangci-lint
 LINT_DOWNLOAD = curl --progress-bar -SfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s latest
 
 MIGRATE = ${GOBIN}/migrate
-MIGRATE_DOWNLOAD = (curl --progress-bar -fL -o $(MIGRATE).tar.gz https://github.com/golang-migrate/migrate/releases/download/v4.11.0/migrate.$(OS)-amd64.tar.gz; tar -xzvf $(MIGRATE).tar.gz -C $(GOBIN); mv $(MIGRATE).$(OS)-amd64 $(MIGRATE); rm $(MIGRATE).tar.gz)
+MIGRATE_DOWNLOAD = (curl --progress-bar -fL -o $(MIGRATE).tar.gz https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.$(OS)-amd64.tar.gz; tar -xzvf $(MIGRATE).tar.gz -C $(GOBIN); mv $(MIGRATE).$(OS)-amd64 $(MIGRATE); rm $(MIGRATE).tar.gz)
 MIGRATE_CONFIG = -source file://internal/infrastructure/db/migrations -database "postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL}"
 
 TPARSE = $(GOBIN)/tparse
