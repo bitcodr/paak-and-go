@@ -42,10 +42,10 @@ func (t *trip) Close() error {
 	return nil
 }
 
-func (p *trip) List(ctx context.Context) (trips []*model.Trip, err error) {
+func (t *trip) List(ctx context.Context) (trips []*model.Trip, err error) {
 	//todo add OFFSET, LIMIT for pagination
 
-	query, err := p.conn.Query(ctx, `SELECT 
+	query, err := t.conn.Query(ctx, `SELECT 
 				trips.id, trips.dates, trips.price, origin.name, destination.name
 				FROM trips 
 				INNER JOIN cities AS origin ON trips.origin_id = origin.id
@@ -81,8 +81,8 @@ func (p *trip) List(ctx context.Context) (trips []*model.Trip, err error) {
 	return trips, nil
 }
 
-func (p *trip) Show(ctx context.Context, id int32) (*model.Trip, error) {
-	row := p.conn.QueryRow(ctx, `SELECT 
+func (t *trip) Show(ctx context.Context, id int32) (*model.Trip, error) {
+	row := t.conn.QueryRow(ctx, `SELECT 
 				trips.id, trips.dates, trips.price, origin.name, destination.name
 				FROM trips 
 				INNER JOIN cities AS origin ON trips.origin_id = origin.id
@@ -103,10 +103,10 @@ func (p *trip) Show(ctx context.Context, id int32) (*model.Trip, error) {
 	return &trip, nil
 }
 
-func (p *trip) Store(ctx context.Context, trip *model.Trip) (*model.Trip, error) {
+func (t *trip) Store(ctx context.Context, trip *model.Trip) (*model.Trip, error) {
 	var tripId int32
 
-	err := p.conn.QueryRow(ctx, `INSERT INTO trips 
+	err := t.conn.QueryRow(ctx, `INSERT INTO trips 
 						(origin_id, destination_id, dates, price)
 						VALUES ($1, $2, $3, $4)
 						RETURNING id`,
