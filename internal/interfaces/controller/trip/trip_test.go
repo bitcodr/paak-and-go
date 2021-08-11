@@ -1,14 +1,15 @@
 package trip
 
 import (
+	"bytes"
 	"context"
 	"errors"
-	"github.com/gorilla/mux"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"testing"
 
+	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/bitcodr/paak-and-go/internal/domain/model"
@@ -145,5 +146,68 @@ func TestShow(t *testing.T) {
 }
 
 func TestStore(t *testing.T) {
+	var testCreate = []struct {
+		name            string
+		body            []byte
+		serviceEntry    *model.Trip
+		serviceResponse *model.Trip
+		want            []byte
+		wantErr         bool
+		mockError       error
+	}{
+		{
+			name: "success",
+			body: []byte(`{"originId":1,"destinationId":2,"dates":"Sun Mon","price":32.54}`),
+			serviceEntry: &model.Trip{
+				Origin: &model.City{
+					ID: 1,
+				},
+				Destination: &model.City{
+					ID: 2,
+				},
+				Dates: "Sun Mon",
+				Price: 32.54,
+			},
+			serviceResponse: &model.Trip{
+				ID: 1,
+				Origin: &model.City{
+					Name: "",
+				},
+				Destination: &model.City{
+					Name: "",
+				},
+				Dates: "Sun Mon",
+				Price: 32.54,
+			},
+			want:      []byte(`{"origin":"","destination":"","id":1,"dates":"Sun Mon","price":32.54}`),
+			wantErr:   false,
+			mockError: nil,
+		},
+	}
 
+	for _, tt := range testCreate {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			ctx := context.Background()
+
+			c := new(tripMock.MockService)
+
+			c.On("Store", ctx, tt.serviceEntry).Return(tt.serviceResponse, tt.mockError)
+
+			got := Store(ctx, c)
+
+			if tt.wantErr {
+				assert.Error(t, errors.New("error while init controller"))
+				return
+			}
+
+			recorder := httptest.NewRecorder()
+
+			request := httptest.NewRequest(http.MethodPost, "/trip", bytes.NewReader(tt.body))
+
+			got(recorder, request)
+
+			assert.Equal(t, tt.want, recorder.Body.Bytes())
+		})
+	}
 }
