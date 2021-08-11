@@ -16,11 +16,15 @@ import (
 	"github.com/bitcodr/paak-and-go/internal/interfaces/middleware"
 )
 
+//Service we can add all our services in here and pass it to our transport patterns
 type Service struct {
 	TripService tripservice.ITrip
+
 	//register your services in transport in here
 }
 
+//InitRest to initialise http apis
+//it is possible in a project that use multiple transport like grpc, http, etc
 func InitRest(ctx context.Context, services *Service, config *config.Service) {
 	router := mux.NewRouter()
 
@@ -48,6 +52,7 @@ func InitRest(ctx context.Context, services *Service, config *config.Service) {
 	graceFullyShotDown(ctx, srv, config)
 }
 
+//graceFullyShotDown terminate all process and http services with ctrl+c
 func graceFullyShotDown(ctx context.Context, srv *http.Server, config *config.Service) {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)

@@ -15,10 +15,15 @@ const (
 	POSTGRES = "postgres"
 )
 
+//DB structure - it is possible in projects that has multiple
+//source of data for persistent , caching and events
+//in DB structure we can have other flags like default connection, etc besides the other connections
 type DB struct {
 	Connections map[string]*Connection
 }
 
+//Connection structure - it is possible in projects that has multiple
+//source of data for persistent , caching and events
 type Connection struct {
 	Name     string
 	Port     int
@@ -28,6 +33,7 @@ type Connection struct {
 	Ssl      string
 }
 
+//Service - is general model for our service that can contains port, read, write, idle timeout
 type Service struct {
 	Host         string
 	RestPort     string        `mapstructure:"rest_port"`
@@ -36,11 +42,13 @@ type Service struct {
 	IdleTimeout  time.Duration `mapstructure:"idle_timeout"`
 }
 
+//Config - complete config structure that will be mapped from config.yml
 type Config struct {
 	DB
 	Service
 }
 
+//Load used in the main file to load config file from ./config.d/config.yml to Config structure
 func Load(ctx context.Context) (*Config, error) {
 	v := viper.New()
 
@@ -71,6 +79,8 @@ func Load(ctx context.Context) (*Config, error) {
 	return &config, nil
 }
 
+//watchConfigChanges when project is running with this function we are able to modify the config
+//without recompile it
 func watchConfigChanges(_ context.Context, v *viper.Viper) {
 	v.WatchConfig()
 	v.OnConfigChange(func(in fsnotify.Event) {
@@ -83,6 +93,7 @@ func watchConfigChanges(_ context.Context, v *viper.Viper) {
 	})
 }
 
+//setDefaultServiceConfig add default value for service in case the config.yml is empty
 func setDefaultServiceConfig(v *viper.Viper) {
 	v.SetDefault("server.host", "0.0.0.0")
 	v.SetDefault("server.rest_port", "8081")

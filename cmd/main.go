@@ -10,6 +10,14 @@ import (
 	"github.com/bitcodr/paak-and-go/internal/interfaces/transport"
 )
 
+/*
+main to know about the structure of this project you can read the README.md
+the structure of project is Hexagonal
+ - interface -> that is transport and framework layer
+ - service -> it is domain model that contains all relation business models and logic without knowing about of source of
+or framework and transportation layer
+ - repository -> that contains source of data we have
+*/
 func main() {
 	ctx := context.Background()
 

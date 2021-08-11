@@ -18,6 +18,9 @@ type trip struct {
 	conn *pgxpool.Pool
 }
 
+//InitRepo instantiate trip entity postgres repository
+//with the interface we have in the impl directory we can implement other source of data and pass it to service
+//without changing anything in out domain service
 func InitRepo(ctx context.Context, cfg *config.Connection) (impl.TripRepo, error) {
 	if cfg == nil {
 		return nil, errors.New("config is empty")
@@ -42,6 +45,7 @@ func (t *trip) Close() error {
 	return nil
 }
 
+//List of trips - fetch from postgres
 func (t *trip) List(ctx context.Context) (trips []*model.Trip, err error) {
 	//todo add OFFSET, LIMIT for pagination
 
@@ -81,6 +85,7 @@ func (t *trip) List(ctx context.Context) (trips []*model.Trip, err error) {
 	return trips, nil
 }
 
+//Show - fetch specific trip from postgres
 func (t *trip) Show(ctx context.Context, id int32) (*model.Trip, error) {
 	row := t.conn.QueryRow(ctx, `SELECT 
 				trips.id, trips.dates, trips.price, origin.name, destination.name
@@ -103,6 +108,7 @@ func (t *trip) Show(ctx context.Context, id int32) (*model.Trip, error) {
 	return &trip, nil
 }
 
+//Store - store a trip in postgres
 func (t *trip) Store(ctx context.Context, trip *model.Trip) (*model.Trip, error) {
 	var tripId int32
 

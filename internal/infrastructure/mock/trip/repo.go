@@ -9,6 +9,8 @@ import (
 )
 
 //MockRepo will satisfy the TripRepo interface for testing purpose
+//we don't wanna have an actual insert in db
+//to use test cases in CI it is best to use mocks
 type MockRepo struct {
 	mock.Mock
 }

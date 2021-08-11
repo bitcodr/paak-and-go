@@ -9,6 +9,8 @@ import (
 )
 
 //MockService will satisfy the ITrip interface for testing purpose
+//we don't wanna have an actual insert in db
+//to use test cases in CI it is best to use mocks
 type MockService struct {
 	mock.Mock
 }

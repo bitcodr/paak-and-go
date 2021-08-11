@@ -11,6 +11,7 @@ import (
 	"github.com/bitcodr/paak-and-go/internal/infrastructure/config"
 )
 
+//NewPostgres start connection for postgres
 func NewPostgres(ctx context.Context, cfg *config.Connection) (*pgxpool.Pool, error) {
 	if cfg == nil {
 		return nil, errors.New("config is empty")
