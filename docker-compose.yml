@@ -9,7 +9,7 @@ services:
     restart: on-failure
     environment:
       - DB_HOST=postgres
-      - SERVER_REST_PORT=8051
+      - SERVICE_REST_PORT=8051
     ports:
       - 8051:8051
     volumes:
