@@ -54,11 +54,9 @@ func (t *trip) List(ctx context.Context) (trips []*model.Trip, err error) {
 				INNER JOIN cities AS destination ON trips.destination_id = destination.id
 				ORDER BY trips.created_at DESC`)
 
-
-	if err != nil || rows.Err() != nil{
+	if err != nil || rows.Err() != nil {
 		return nil, err
 	}
-
 
 	defer rows.Close()
 
@@ -106,7 +104,7 @@ func (t *trip) Show(ctx context.Context, id int32) (*model.Trip, error) {
 //Store - store a trip in postgres
 func (t *trip) Store(ctx context.Context, trip *model.Trip) (*model.Trip, error) {
 	var tripId int32
-
+	//todo check the origin and destination relation are exist or not
 	err := t.conn.QueryRow(ctx, `INSERT INTO trips 
 						(origin_id, destination_id, dates, price)
 						VALUES ($1, $2, $3, $4)
