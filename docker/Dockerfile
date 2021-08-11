@@ -12,6 +12,6 @@ FROM alpine
 
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-COPY --from=build /app/bin/paak /app/paak
+COPY --from=build /app/bin/paak-and-go /app/paak-and-go
 
-ENTRYPOINT [ "/app/paak" ]
+ENTRYPOINT [ "/app/paak-and-go" ]
