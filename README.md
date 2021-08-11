@@ -75,3 +75,8 @@ You can also challenge and *change the proposed API structure if you feel it is 
     - update the config.d dir
     - go build -o ./bin/paak-and-go ./cmd/...
     - ./bin/paak-and-go
+
+
+### Todos
+    - need to write more tests
+    - implement benchmarks
