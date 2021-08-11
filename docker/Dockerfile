@@ -4,7 +4,7 @@ RUN apk add --no-cache git make curl ca-certificates
 
 WORKDIR /app
 
-ADD deploy .
+ADD . .
 
 RUN make mod && make build
 
