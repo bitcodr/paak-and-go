@@ -16,10 +16,10 @@ type ITrip interface {
 }
 
 type trip struct {
-	repo impl.Trip
+	repo impl.TripRepo
 }
 
-func InitService(_ context.Context, repository impl.Trip) ITrip {
+func InitService(_ context.Context, repository impl.TripRepo) ITrip {
 	return &trip{
 		repo: repository,
 	}

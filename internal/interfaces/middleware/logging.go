@@ -7,7 +7,7 @@ import (
 
 func Logging(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		//add more data to logger
+		//add tracer and metrics
 		log.Println(r.RequestURI)
 
 		next.ServeHTTP(w, r)

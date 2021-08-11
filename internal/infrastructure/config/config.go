@@ -11,6 +11,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	POSTGRES = "postgres"
+)
+
 type DB struct {
 	Connections map[string]*Connection
 }

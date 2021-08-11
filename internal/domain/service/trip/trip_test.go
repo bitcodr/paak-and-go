@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/bitcodr/paak-and-go/internal/domain/model"
-	"github.com/bitcodr/paak-and-go/internal/infrastructure/mock"
+	tripMock "github.com/bitcodr/paak-and-go/internal/infrastructure/mock/trip"
 	"github.com/bitcodr/paak-and-go/internal/infrastructure/repository/impl"
 )
 
@@ -61,7 +61,7 @@ func TestTrip_Store(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 
-			c := new(mock.TripRepo)
+			c := new(tripMock.MockRepo)
 
 			c.On("Store", ctx, tt.entry).Return(tt.want, tt.mockError)
 
@@ -125,7 +125,7 @@ func TestTrip_List(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 
-			c := new(mock.TripRepo)
+			c := new(tripMock.MockRepo)
 
 			c.On("List", ctx).Return(tt.want, tt.mockError)
 
@@ -178,7 +178,7 @@ func TestTrip_Show(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 
-			c := new(mock.TripRepo)
+			c := new(tripMock.MockRepo)
 
 			c.On("Show", ctx, tt.entry).Return(tt.want, tt.mockError)
 
@@ -202,15 +202,15 @@ func TestTrip_Show(t *testing.T) {
 func TestInitService(t *testing.T) {
 	var testCreate = []struct {
 		name    string
-		entry   impl.Trip
+		entry   impl.TripRepo
 		want    *trip
 		wantErr bool
 	}{
 		{
 			name:  "success",
-			entry: impl.Trip(nil),
+			entry: impl.TripRepo(nil),
 			want: &trip{
-				repo: impl.Trip(nil),
+				repo: impl.TripRepo(nil),
 			},
 			wantErr: false,
 		},

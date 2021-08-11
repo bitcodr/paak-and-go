@@ -17,7 +17,7 @@ type city struct {
 	conn *pgxpool.Pool
 }
 
-func InitRepo(ctx context.Context, cfg *config.Connection) (impl.City, error) {
+func InitRepo(ctx context.Context, cfg *config.Connection) (impl.CityRepo, error) {
 	if cfg == nil {
 		return nil, errors.New("config is empty")
 	}

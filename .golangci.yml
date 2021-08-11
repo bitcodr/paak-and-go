@@ -22,7 +22,7 @@ issues:
         - gomnd
         - dupl
         - lll
-    - path: mockdata
+    - path: internal/infrastructure/mock
       linters:
         - gomnd
         - dupl

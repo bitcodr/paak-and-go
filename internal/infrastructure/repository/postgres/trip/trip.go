@@ -18,7 +18,7 @@ type trip struct {
 	conn *pgxpool.Pool
 }
 
-func InitRepo(ctx context.Context, cfg *config.Connection) (impl.Trip, error) {
+func InitRepo(ctx context.Context, cfg *config.Connection) (impl.TripRepo, error) {
 	if cfg == nil {
 		return nil, errors.New("config is empty")
 	}
