@@ -16,6 +16,16 @@ import (
 
 type Controller func(http.ResponseWriter, *http.Request)
 
+// List @Summary List of trips
+// @ID list
+// @Description List of trips
+// @Produce json
+// @Tags Trip
+// @Success 200 {array} model.Trip
+// @Failure 422 string http.StatusUnprocessableEntity
+// @Failure 500 string http.StatusInternalServerError
+// @Router /trip [get]
+//.
 func List(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 	return func(w http.ResponseWriter, r *http.Request) {
 		response, err := tripSrv.List(ctx)
@@ -34,6 +44,16 @@ func List(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 	}
 }
 
+// Show @Summary get a trip
+// @ID show
+// @Description get a trip
+// @Produce json
+// @Tags Trip
+// @Success 200 {object} model.Trip
+// @Failure 422 string http.StatusUnprocessableEntity
+// @Failure 500 string http.StatusInternalServerError
+// @Router /trip/{id} [get]
+//.
 func Show(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -66,6 +86,20 @@ func Show(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 	}
 }
 
+// Store @Summary store a trip
+// @ID store
+// @Description store a trip
+// @Produce json
+// @Tags Trip
+// @Param request body originId 1 "id of origin"
+// @Param request body destinationId 2 "id of destination"
+// @Param request body dates "Sun Mon" "days of week"
+// @Param request body price 33.32 "price of transfer"
+// @Success 200 {object} model.Trip
+// @Failure 422 string http.StatusUnprocessableEntity
+// @Failure 500 string http.StatusInternalServerError
+// @Router /trip [post]
+//.
 func Store(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 	return func(w http.ResponseWriter, r *http.Request) {
 		body, err := io.ReadAll(r.Body)

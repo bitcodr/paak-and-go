@@ -47,3 +47,31 @@ We want you to build a REST API that works with our current needs, but that can 
 Use the packages that you think are suitable for the job, as well as the **architecture and code structure** that makes most sense from your point of view. Feel free to move, split, etc. the provided files into the files and folders of your choice.
 
 You can also challenge and *change the proposed API structure if you feel it is necessary*, as long as you give a reason why you have decided to do things in a different way.
+
+--- 
+---
+
+## Run
+
+### Using Makefile
+    - check the help:  make help
+
+    - Run
+        - make create-env  ## update the config.d directory
+        - make mod
+        - make build
+        - ./bin/pack-and-go
+
+### Using Docker
+    - update the config.d dir
+    - make docker-build
+    - make docker-up
+    
+    or 
+    
+    - docker-compose up -d
+
+### Build and run it manually
+    - update the config.d dir
+    - go build -o ./bin/paak-and-go ./cmd/...
+    - ./bin/paak-and-go
