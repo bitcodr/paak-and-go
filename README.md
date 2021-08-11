@@ -62,15 +62,6 @@ You can also challenge and *change the proposed API structure if you feel it is 
         - make build
         - ./bin/pack-and-go
 
-### Using Docker
-    - update the config.d dir
-    - make docker-build
-    - make docker-up
-    
-    or 
-    
-    - docker-compose up -d
-
 ### Build and run it manually
     - update the config.d dir
     - go build -o ./bin/paak-and-go ./cmd/...
