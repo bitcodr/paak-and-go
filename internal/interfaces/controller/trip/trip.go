@@ -91,10 +91,7 @@ func Show(ctx context.Context, tripSrv tripservice.ITrip) Controller {
 // @Description store a trip
 // @Produce json
 // @Tags Trip
-// @Param request body originId 1 "id of origin"
-// @Param request body destinationId 2 "id of destination"
-// @Param request body dates "Sun Mon" "days of week"
-// @Param request body price 33.32 "price of transfer"
+// @Param request body model.Trip "trip"
 // @Success 200 {object} model.Trip
 // @Failure 422 string http.StatusUnprocessableEntity
 // @Failure 500 string http.StatusInternalServerError
