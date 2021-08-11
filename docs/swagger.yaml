@@ -1,4 +1,78 @@
+definitions:
+  model.Trip:
+    properties:
+      dates:
+        type: string
+      id:
+        type: integer
+      price:
+        type: number
+    type: object
 info:
   contact: {}
-paths: {}
+paths:
+  /trip:
+    get:
+      description: List of trips
+      operationId: list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Trip'
+            type: array
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      tags:
+      - Trip
+    post:
+      description: store a trip
+      operationId: store
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Trip'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      tags:
+      - Trip
+  /trip/{id}:
+    get:
+      description: get a trip
+      operationId: show
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Trip'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      tags:
+      - Trip
 swagger: "2.0"
