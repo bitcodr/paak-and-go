@@ -12,7 +12,6 @@ require (
 	github.com/gorilla/mux v1.6.2
 	github.com/jackc/pgx/v4 v4.13.0
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/pashagolub/pgxmock v1.3.0
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.7.0
