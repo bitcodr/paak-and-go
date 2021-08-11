@@ -3,8 +3,6 @@ package trip
 import (
 	"context"
 	"errors"
-	"net/http"
-
 	"github.com/jackc/pgx/v4/pgxpool"
 
 	"github.com/bitcodr/paak-and-go/internal/domain/model"
@@ -49,29 +47,26 @@ func (t *trip) Close() error {
 func (t *trip) List(ctx context.Context) (trips []*model.Trip, err error) {
 	//todo add OFFSET, LIMIT for pagination
 
-	query, err := t.conn.Query(ctx, `SELECT 
+	rows, err := t.conn.Query(ctx, `SELECT 
 				trips.id, trips.dates, trips.price, origin.name, destination.name
 				FROM trips 
 				INNER JOIN cities AS origin ON trips.origin_id = origin.id
 				INNER JOIN cities AS destination ON trips.destination_id = destination.id
 				ORDER BY trips.created_at DESC`)
 
-	if err != nil {
+
+	if err != nil || rows.Err() != nil{
 		return nil, err
 	}
 
-	defer query.Close()
 
-	if !query.Next() {
-		return nil, errors.New(http.StatusText(http.StatusNoContent))
-	}
+	defer rows.Close()
 
-	for query.Next() {
-
+	for rows.Next() {
 		var trip model.Trip
 		var origin, destination model.City
 
-		err := query.Scan(&trip.ID, &trip.Dates, &trip.Price, &origin.Name, &destination.Name)
+		err := rows.Scan(&trip.ID, &trip.Dates, &trip.Price, &origin.Name, &destination.Name)
 		if err != nil {
 			return nil, err
 		}
