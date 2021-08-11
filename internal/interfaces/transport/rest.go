@@ -52,7 +52,7 @@ func graceFullyShotDown(ctx context.Context, srv *http.Server, config *config.Se
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	<-c
-	ctx, cancel := context.WithTimeout(context.Background(), config.IdleTimeout)
+	ctx, cancel := context.WithTimeout(ctx, config.IdleTimeout)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Println(err)
