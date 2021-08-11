@@ -58,6 +58,7 @@ func graceFullyShotDown(ctx context.Context, srv *http.Server, config *config.Se
 		log.Println(err)
 		return
 	}
+	//todo call db connection close
 	log.Println("shutting down")
 	os.Exit(0)
 }

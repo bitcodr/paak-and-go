@@ -34,6 +34,14 @@ func InitRepo(ctx context.Context, cfg *config.Connection) (impl.Trip, error) {
 	}, nil
 }
 
+func (t *trip) Close() error {
+	if t.conn != nil {
+		t.conn.Close()
+	}
+
+	return nil
+}
+
 func (p *trip) List(ctx context.Context) (trips []*model.Trip, err error) {
 	//todo add OFFSET, LIMIT for pagination
 
